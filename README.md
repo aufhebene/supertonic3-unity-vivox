@@ -1,40 +1,58 @@
-# Project Overview: Piper-Vivox TTS Bridge
+# Supertonic-3 × Vivox TTS Bridge
 
-This project integrates the **Piper Unity Sample** with the **Vivox SDK** to create a system that transmits real-time Text-to-Speech (TTS) audio into a Vivox voice channel within the Unity environment. This allows users to type text and have the generated speech heard by other participants in the same Vivox channel.
+Unity project that bridges **[Supertonic-3](https://supertonic.supertone.ai/)** — an offline neural TTS running on `Unity.InferenceEngine` (Sentis) — into a **Vivox** voice channel. Typed text is synthesized locally and injected as the player's voice so other channel participants hear it.
+
+Forked from a Piper + eSpeak-NG implementation; the TTS backend was swapped to Supertonic-3 while preserving the Vivox integration seam.
 
 ## Key Features
 
-  * **Real-Time TTS Conversion**: Utilizes Piper, a lightweight, on-device TTS system, to convert text into high-quality voice audio. Piper operates offline and uses compact models (20-60MB).
-  * **Dynamic Voice Model Selection**: A Unity UI dropdown enables users to easily switch between various Piper voice models (.sentis) at runtime.
-  * **Vivox Voice Channel Integration**: The generated TTS audio is set as the virtual microphone input for Vivox, allowing it to be transmitted to the voice channel in real time.
-  * **Cross-Platform Compatibility**: The TTS functionality is supported on multiple platforms, including Windows, macOS, and Android, as supported by Piper Unity.
+* **Offline neural TTS**: Supertonic-3 runs entirely on-device via Sentis (flow-matching diffusion vocoder, FP16 models, ~200 MB total in StreamingAssets). No network calls for synthesis.
+* **Multilingual**: 31 languages selectable at runtime via the `SupertonicLanguage` enum.
+* **Voice style swap**: Drop a `<Name>.json` from the [Supertonic Voice Builder](https://supertonic.supertone.ai/voice-builder) into `Assets/StreamingAssets/Supertonic/VoiceStyles/` and it appears in the UI dropdown automatically.
+* **Vivox injection**: Synthesized PCM is written to a WAV and fed into Vivox via `StartAudioInjection`, so remote participants hear it as if it were your mic.
+* **No native plugins**: Unlike the Piper-era code, no `libespeak-ng` or platform-specific binaries are required.
 
-## System Architecture
+## Architecture
 
-1.  **Text Input**: The user inputs text through a Unity UI element.
-2.  **Piper TTS Processing**: The input text is processed by Piper's `ESpeakTokenizer` to generate phonemes, which are then synthesized into audio data by the selected `.sentis` voice model.
-3.  **Audio Data Conversion**: The audio data from Piper is converted into a format compatible with Unity's `AudioClip` or a byte array.
-4.  **Vivox Microphone Input Setup**: The converted audio data is set as a virtual input device using the Vivox SDK's `SetAudioInputDevice` function.
-5.  **Voice Channel Transmission**: Vivox streams the configured audio input in real time to all users participating in the voice channel.
+```
+text → SupertonicTtsManager.Synthesize()
+         ├── duration_predictor → text_encoder → vector_estimator (× totalStep) → vocoder
+         └── OnAudioDataGenerated(float[] pcm, int sampleRate)
+                                  │
+                                  ▼
+                       VivoxVoiceManager
+                         └── write WAV → VivoxService.StartAudioInjection(path)
+```
 
-## Development Environment and Requirements
+Two singletons wire it together:
 
-  * **Unity**: `6000.2.0b9` or higher
-  * **Piper Unity Sample**: The foundational [piper-unity repository](https://github.com/skykim/piper-unity) by Sky Kim.
-  * **Vivox SDK for Unity**: Required for implementing Vivox voice channel functionality.
+* **`SupertonicTtsManager`** (`Assets/Scripts/Supertonic/`) — owns four Sentis `Worker`s, lazy-loads FP16 `.sentis` models and config from `StreamingAssets/Supertonic/`, chunks input (120 chars for ko/ja, 300 otherwise), runs the inference chain, and broadcasts PCM via `OnAudioDataGenerated`.
+* **`VivoxVoiceManager`** (`Assets/Scripts/ChatChannelSample/Managers/`) — subscribes to that event, writes the PCM as a WAV under `Application.persistentDataPath`, and calls `VivoxService.Instance.StartAudioInjection(...)`.
+
+## Requirements
+
+* **Unity Editor**: `6000.4.5f1` or newer
+* **Render pipeline**: URP 17.x
+* **Sentis**: `com.unity.ai.inference 2.6.1`
+* **Vivox**: `com.unity.services.vivox 16.6.2` + a Vivox developer account
 
 ## Getting Started
 
-1.  **Install the Vivox SDK**: Add the Vivox SDK to your project via the Unity Package Manager.
-2.  **Integrate the Piper Unity Sample**: Set up the Piper Unity Sample project using this project's code. (Refer to the `Getting Started` section in the original `README.md` for base setup).
-3.  **Configure Vivox Account**: Create an account on the Vivox Developer Portal, get your App ID and key, and configure them in your project.
-4.  **Add Vivox-Piper Integration Scripts**: Write a custom script to connect to a Vivox channel and set the audio input to the Piper TTS output.
-5.  **Run the Demo**: Run the project in the Unity editor. Connect to a Vivox channel, input some text, and confirm that the TTS audio is transmitted to the channel.
+1. Clone the repo and open it in Unity 6000.4.5f1+. `.sln` / `.csproj` regenerate on open.
+2. Open `Assets/Scenes/VivoxSample/MainScene.unity` (the only scene in Build Settings).
+3. Configure Vivox credentials on the `VivoxVoiceManager` component — fill `_key`, `_issuer`, `_domain`, `_server` from your Vivox developer portal, *or* rely on Unity Authentication (auto-enabled when the auth package is present).
+4. Enter Play mode. Log in, join the lobby, and use the text chat — typed messages are synthesized locally and injected into the Vivox channel.
 
------
+## Adding Voices
 
-### Contribution
+Drop a Supertonic voice JSON into `Assets/StreamingAssets/Supertonic/VoiceStyles/<Name>.json` — `VoiceStyleSelector` picks it up at runtime. Generate custom voices with the [Supertonic Voice Builder](https://supertonic.supertone.ai/voice-builder).
 
-This project is built upon the excellent Piper Unity Sample created by Sky Kim. A sincere thank you to the original repository and its developer for providing the foundation for this project.
+## Notes
 
-Special thanks to Woojin Park, whose inspiration led to the completion of this project.
+* The four `.sentis` models in `StreamingAssets/Supertonic/Models/` total ~200 MB. For mobile builds, consider Addressables before shipping.
+* `totalStep` (default 8) on the diffusion loop controls latency. Lower to 6 if first-syllable latency feels too long.
+* Vivox audio injection is file-based, not streaming — rapid synthesis calls are dropped while `busy`.
+
+## Credits
+
+Originally built on Sky Kim's [piper-unity](https://github.com/skykim/piper-unity) sample; the Piper backend has since been replaced with Supertonic-3.

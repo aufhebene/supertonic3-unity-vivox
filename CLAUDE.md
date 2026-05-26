@@ -39,7 +39,6 @@ The TTS-to-Vivox pipeline is a chain of two singletons. Understanding their wiri
 2. **`VivoxVoiceManager`** (`Assets/Scripts/ChatChannelSample/Managers/VivoxVoiceManager.cs`) — singleton wrapping `Unity.Services.Vivox`.
    - In `Awake()`, subscribes to `SupertonicTtsManager.Instance.OnAudioDataGenerated`.
    - When `useSupertonic == true`, the handler writes the float buffer to `Application.persistentDataPath/SupertonicAudio.wav` and calls `VivoxService.Instance.StartAudioInjection(filePath)`. (`StartAudioInjection` is file-based, hence the WAV detour.)
-   - `useSupertonic` uses `[FormerlySerializedAs("usePiper")]` so existing scene assets carry over the inspector toggle.
    - `TextToSpeechSendMessage(message)` routes to `SupertonicTtsManager.Synthesize` when `useSupertonic`, otherwise to Vivox's built-in `VivoxService.TextToSpeechSendMessage`.
 
 3. **`AudioTapsManager`** — separate from the TTS path; manages Vivox audio taps (echo / "evil" mixer effects).

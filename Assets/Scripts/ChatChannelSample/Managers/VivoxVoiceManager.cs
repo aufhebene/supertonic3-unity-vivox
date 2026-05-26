@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 using Unity.Services.Core;
 using Unity.Services.Vivox;
 using System;
@@ -29,7 +28,6 @@ public class VivoxVoiceManager : MonoBehaviour
     [SerializeField]
     string _server;
 
-    [FormerlySerializedAs("usePiper")]
     public bool useSupertonic = false;
 
     [Tooltip("Target sample rate for the WAV file injected into Vivox. Must match Vivox's negotiated codec rate. Opus commonly uses 48000. Set to <= 0 to disable resampling and inject the TTS output as-is.")]
