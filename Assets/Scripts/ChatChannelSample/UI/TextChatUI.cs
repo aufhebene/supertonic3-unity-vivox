@@ -31,6 +31,15 @@ public class TextChatUI : MonoBehaviour
 
     void Start()
     {
+        // Defensive unsubscribe-then-subscribe: if Editor domain reload is disabled or this
+        // component was somehow re-Started, this prevents handler accumulation that would
+        // cause the same message to appear multiple times.
+        VivoxService.Instance.ChannelJoined -= OnChannelJoined;
+        VivoxService.Instance.DirectedMessageReceived -= OnDirectedMessageReceived;
+        VivoxService.Instance.ChannelMessageReceived -= OnChannelMessageReceived;
+        VivoxService.Instance.ChannelMessageEdited -= OnChannelMessageEdited;
+        VivoxService.Instance.ChannelMessageDeleted -= OnChannelMessageDeleted;
+
         VivoxService.Instance.ChannelJoined += OnChannelJoined;
         VivoxService.Instance.DirectedMessageReceived += OnDirectedMessageReceived;
         VivoxService.Instance.ChannelMessageReceived += OnChannelMessageReceived;
@@ -238,6 +247,13 @@ public class TextChatUI : MonoBehaviour
 
     void AddMessageToChat(VivoxMessage message, bool isHistory = false, bool scrollToBottom = false)
     {
+        if (!string.IsNullOrEmpty(message.MessageId) &&
+            m_MessageObjPool.Any(kvp => kvp.Key == message.MessageId))
+        {
+            Debug.Log($"[Chat] Duplicate message dropped (MessageId={message.MessageId}, isHistory={isHistory}).");
+            return;
+        }
+
         var newMessageObj = Instantiate(MessageObject, ChatContentObj.transform);
         var newMessageTextObject = newMessageObj.GetComponent<MessageObjectUI>();
         if (isHistory)

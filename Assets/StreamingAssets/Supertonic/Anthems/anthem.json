@@ -1,0 +1,189 @@
+{
+  "_notice": "Language-code anthem presets for the demo InputField. Each value uses a public-domain, state-symbol, or otherwise broadly usable official/public text on a best-effort basis. Confirm local legal requirements before commercial distribution.",
+  "en": {
+    "country": "United States",
+    "title": "The Star-Spangled Banner",
+    "status": "Public-domain historical lyrics.",
+    "text": "O say can you see, by the dawn's early light,\nWhat so proudly we hailed at the twilight's last gleaming,\nWhose broad stripes and bright stars through the perilous fight,\nO'er the ramparts we watched, were so gallantly streaming?"
+  },
+  "ko": {
+    "country": "South Korea",
+    "title": "Aegukga",
+    "status": "Official national anthem text; verify local reuse terms for distribution.",
+    "text": "동해물과 백두산이 마르고 닳도록\n하느님이 보우하사 우리나라 만세\n무궁화 삼천리 화려 강산\n대한 사람 대한으로 길이 보전하세"
+  },
+  "ja": {
+    "country": "Japan",
+    "title": "Kimigayo",
+    "status": "Ancient poem used as official anthem text.",
+    "text": "君が代は\n千代に八千代に\nさざれ石の\n巌となりて\n苔のむすまで"
+  },
+  "ar": {
+    "country": "Iraq",
+    "title": "Mawtini",
+    "status": "Public-domain-era Arabic anthem text; verify local reuse terms.",
+    "text": "موطني موطني\nالجلال والجمال والسناء والبهاء\nفي رباك في رباك\nوالحياة والنجاة والهناء والرجاء\nفي هواك في هواك\nهل أراك سالماً منعماً وغانماً مكرماً\nهل أراك في علاك تبلغ السماك\nموطني موطني"
+  },
+  "bg": {
+    "country": "Bulgaria",
+    "title": "Mila Rodino",
+    "status": "Public-domain historical lyrics.",
+    "text": "Горда Стара планина,\nдо ней Дунава синей,\nслънце Тракия огрява,\nнад Пирина пламеней.\nМила Родино,\nти си земен рай,\nтвойта хубост, твойта прелест,\nах, те нямат край."
+  },
+  "cs": {
+    "country": "Czech Republic",
+    "title": "Kde domov muj",
+    "status": "Public-domain historical lyrics.",
+    "text": "Kde domov můj, kde domov můj?\nVoda hučí po lučinách,\nbory šumí po skalinách,\nv sadě skví se jara květ,\nzemský ráj to na pohled!\nA to je ta krásná země,\nzemě česká, domov můj,\nzemě česká, domov můj!"
+  },
+  "da": {
+    "country": "Denmark",
+    "title": "Der er et yndigt land",
+    "status": "Public-domain historical lyrics.",
+    "text": "Der er et yndigt land,\ndet står med brede bøge\nnær salten østerstrand;\ndet bugter sig i bakke, dal,\ndet hedder gamle Danmark,\nog det er Frejas sal."
+  },
+  "de": {
+    "country": "Germany",
+    "title": "Deutschlandlied",
+    "status": "Public-domain historical lyrics; official anthem uses this stanza.",
+    "text": "Einigkeit und Recht und Freiheit\nfür das deutsche Vaterland!\nDanach lasst uns alle streben\nbrüderlich mit Herz und Hand!\nEinigkeit und Recht und Freiheit\nsind des Glückes Unterpfand;\nblüh im Glanze dieses Glückes,\nblühe, deutsches Vaterland!"
+  },
+  "el": {
+    "country": "Greece",
+    "title": "Hymn to Liberty",
+    "status": "Public-domain historical lyrics.",
+    "text": "Σε γνωρίζω από την κόψη\nτου σπαθιού την τρομερή,\nσε γνωρίζω από την όψη\nπου με βία μετράει τη γη.\nΑπ' τα κόκαλα βγαλμένη\nτων Ελλήνων τα ιερά,\nκαι σαν πρώτα ανδρειωμένη,\nχαίρε, ω χαίρε, Ελευθεριά!"
+  },
+  "es": {
+    "country": "Argentina",
+    "title": "Himno Nacional Argentino",
+    "status": "Spanish-language public-domain anthem text; Spain's anthem has no official lyrics.",
+    "text": "Oid, mortales, el grito sagrado:\n¡Libertad! ¡Libertad! ¡Libertad!\nOid el ruido de rotas cadenas,\nved en trono a la noble igualdad.\nYa su trono dignísimo abrieron\nlas Provincias Unidas del Sud,\ny los libres del mundo responden:\n¡Al gran pueblo argentino, salud!"
+  },
+  "et": {
+    "country": "Estonia",
+    "title": "Mu isamaa, mu onn ja room",
+    "status": "Public-domain historical lyrics.",
+    "text": "Mu isamaa, mu õnn ja rõõm,\nkui kaunis oled sa!\nEi leia mina iial teal\nsee suure, laia ilma peal,\nmis mul nii armas oleks ka,\nkui sa, mu isamaa!"
+  },
+  "fi": {
+    "country": "Finland",
+    "title": "Maamme",
+    "status": "Public-domain historical lyrics.",
+    "text": "Oi maamme, Suomi, synnyinmaa,\nsoi, sana kultainen!\nEi laaksoa, ei kukkulaa,\nei vettä, rantaa rakkaampaa\nkuin kotimaa tää pohjoinen,\nmaa kallis isien."
+  },
+  "fr": {
+    "country": "France",
+    "title": "La Marseillaise",
+    "status": "Public-domain historical lyrics.",
+    "text": "Allons enfants de la Patrie,\nle jour de gloire est arrivé!\nContre nous de la tyrannie,\nl'étendard sanglant est levé.\nEntendez-vous dans les campagnes\nmugir ces féroces soldats?\nIls viennent jusque dans vos bras\négorger vos fils, vos compagnes!"
+  },
+  "hi": {
+    "country": "India",
+    "title": "Jana Gana Mana",
+    "status": "Public-domain-era official anthem text; verify local ceremonial rules.",
+    "text": "जन गण मन अधिनायक जय हे\nभारत भाग्य विधाता\nपंजाब सिंधु गुजरात मराठा\nद्राविड़ उत्कल बंग\nविंध्य हिमाचल यमुना गंगा\nउच्छल जलधि तरंग\nतव शुभ नामे जागे\nतव शुभ आशीष मागे\nगाहे तव जय गाथा"
+  },
+  "hr": {
+    "country": "Croatia",
+    "title": "Lijepa nasa domovino",
+    "status": "Public-domain historical lyrics.",
+    "text": "Lijepa naša domovino,\noj junačka zemljo mila,\nstare slave djedovino,\nda bi vazda sretna bila!\nMila, kano si nam slavna,\nmila si nam ti jedina,\nmila, kuda si nam ravna,\nmila, kuda si planina!"
+  },
+  "hu": {
+    "country": "Hungary",
+    "title": "Himnusz",
+    "status": "Public-domain historical lyrics.",
+    "text": "Isten, áldd meg a magyart\njó kedvvel, bőséggel,\nnyújts feléje védő kart,\nha küzd ellenséggel;\nbal sors akit régen tép,\nhozz rá víg esztendőt,\nmegbűnhődte már e nép\na múltat s jövendőt!"
+  },
+  "id": {
+    "country": "Indonesia",
+    "title": "Indonesia Raya",
+    "status": "Public-domain-era official anthem text; verify local ceremonial rules.",
+    "text": "Indonesia tanah airku,\ntanah tumpah darahku,\ndi sanalah aku berdiri,\njadi pandu ibuku.\nIndonesia kebangsaanku,\nbangsa dan tanah airku,\nmarilah kita berseru:\nIndonesia bersatu!"
+  },
+  "it": {
+    "country": "Italy",
+    "title": "Il Canto degli Italiani",
+    "status": "Public-domain historical lyrics.",
+    "text": "Fratelli d'Italia,\nl'Italia s'è desta,\ndell'elmo di Scipio\ns'è cinta la testa.\nDov'è la Vittoria?\nLe porga la chioma,\nché schiava di Roma\nIddio la creò."
+  },
+  "lt": {
+    "country": "Lithuania",
+    "title": "Tautiska giesme",
+    "status": "Public-domain historical lyrics.",
+    "text": "Lietuva, Tėvyne mūsų,\ntu didvyrių žeme,\niš praeities tavo sūnūs\nte stiprybę semia.\nTegul tavo vaikai eina\nvien takais dorybės,\ntegul dirba tavo naudai\nir žmonių gėrybei."
+  },
+  "lv": {
+    "country": "Latvia",
+    "title": "Dievs, sveti Latviju",
+    "status": "Public-domain historical lyrics.",
+    "text": "Dievs, svētī Latviju,\nmūs' dārgo tēviju,\nsvētī jel Latviju,\nak, svētī jel to!\nKur latvju meitas zied,\nkur latvju dēli dzied,\nlaid mums tur laimē diet\nmūs' Latvijā!"
+  },
+  "nl": {
+    "country": "Netherlands",
+    "title": "Wilhelmus",
+    "status": "Public-domain historical lyrics.",
+    "text": "Wilhelmus van Nassouwe\nben ik, van Duitsen bloed,\nden vaderland getrouwe\nblijf ik tot in den dood.\nEen Prinse van Oranje\nben ik, vrij, onverveerd,\nden Koning van Hispanje\nheb ik altijd geëerd."
+  },
+  "pl": {
+    "country": "Poland",
+    "title": "Mazurek Dabrowskiego",
+    "status": "Public-domain historical lyrics.",
+    "text": "Jeszcze Polska nie zginęła,\nkiedy my żyjemy.\nCo nam obca przemoc wzięła,\nszablą odbierzemy.\nMarsz, marsz, Dąbrowski,\nz ziemi włoskiej do Polski,\nza twoim przewodem\nzłączym się z narodem."
+  },
+  "pt": {
+    "country": "Portugal",
+    "title": "A Portuguesa",
+    "status": "Public-domain historical lyrics.",
+    "text": "Heróis do mar, nobre povo,\nnação valente e imortal,\nlevantai hoje de novo\no esplendor de Portugal!\nEntre as brumas da memória,\nó Pátria, sente-se a voz\ndos teus egrégios avós,\nque há de guiar-te à vitória!"
+  },
+  "ro": {
+    "country": "Romania",
+    "title": "Desteapta-te, romane!",
+    "status": "Public-domain historical lyrics.",
+    "text": "Deșteaptă-te, române, din somnul cel de moarte,\nîn care te-adânciră barbarii de tirani!\nAcum ori niciodată croiește-ți altă soarte,\nla care să se-nchine și cruzii tăi dușmani!"
+  },
+  "ru": {
+    "country": "Russia",
+    "title": "National Anthem of the Russian Federation",
+    "status": "Official state-symbol text; Russian law excludes state symbols from copyright protection.",
+    "text": "Россия — священная наша держава,\nРоссия — любимая наша страна.\nМогучая воля, великая слава —\nТвоё достоянье на все времена!\nСлавься, Отечество наше свободное,\nБратских народов союз вековой,\nПредками данная мудрость народная!\nСлавься, страна! Мы гордимся тобой!"
+  },
+  "sk": {
+    "country": "Slovakia",
+    "title": "Nad Tatrou sa blyska",
+    "status": "Public-domain historical lyrics.",
+    "text": "Nad Tatrou sa blýska,\nhromy divo bijú.\nZastavme ich, bratia,\nveď sa ony stratia,\nSlováci ožijú."
+  },
+  "sl": {
+    "country": "Slovenia",
+    "title": "Zdravljica",
+    "status": "Public-domain historical lyrics; official anthem stanza.",
+    "text": "Žive naj vsi narodi,\nki hrepene dočakat dan,\nda koder sonce hodi,\nprepir iz sveta bo pregnan,\nda rojak prost bo vsak,\nne vrag, le sosed bo mejak!"
+  },
+  "sv": {
+    "country": "Sweden",
+    "title": "Du gamla, du fria",
+    "status": "Public-domain historical lyrics.",
+    "text": "Du gamla, du fria, du fjällhöga nord,\ndu tysta, du glädjerika sköna!\nJag hälsar dig, vänaste land uppå jord,\ndin sol, din himmel, dina ängder gröna."
+  },
+  "tr": {
+    "country": "Turkey",
+    "title": "Istiklal Marsi",
+    "status": "Public-domain-era official anthem text; verify local ceremonial rules.",
+    "text": "Korkma, sönmez bu şafaklarda yüzen al sancak;\nsönmeden yurdumun üstünde tüten en son ocak.\nO benim milletimin yıldızıdır, parlayacak;\no benimdir, o benim milletimindir ancak."
+  },
+  "uk": {
+    "country": "Ukraine",
+    "title": "Shche ne vmerla Ukrainy",
+    "status": "Public-domain historical lyrics with official modern usage; verify current official text if exact ceremonial form is required.",
+    "text": "Ще не вмерла України і слава, і воля,\nще нам, браття молодії, усміхнеться доля.\nЗгинуть наші воріженьки, як роса на сонці,\nзапануєм і ми, браття, у своїй сторонці."
+  },
+  "vi": {
+    "country": "Vietnam",
+    "title": "Tien Quan Ca",
+    "status": "Official anthem text; reports indicate the author's family donated the work to the public/state, but verify local reuse terms.",
+    "text": "Đoàn quân Việt Nam đi,\nchung lòng cứu quốc,\nbước chân dồn vang trên đường gập ghềnh xa.\nCờ in máu chiến thắng mang hồn nước,\nsúng ngoài xa chen khúc quân hành ca.\nĐường vinh quang xây xác quân thù,\nthắng gian lao cùng nhau lập chiến khu."
+  }
+}

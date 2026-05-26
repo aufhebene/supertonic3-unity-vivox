@@ -9124,13 +9124,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 718930946908295942, guid: b8ead6ed17da7fd4dbc5fe1e4bfbf7c2, type: 3}
-      propertyPath: voiceNameText
-      value: 
-      objectReference: {fileID: 1027016823}
     - target: {fileID: 2624542205500824503, guid: b8ead6ed17da7fd4dbc5fe1e4bfbf7c2, type: 3}
       propertyPath: m_Name
-      value: PiperManager
+      value: SupertonicTtsManager
       objectReference: {fileID: 0}
     - target: {fileID: 7165380344054698881, guid: b8ead6ed17da7fd4dbc5fe1e4bfbf7c2, type: 3}
       propertyPath: m_LocalPosition.x

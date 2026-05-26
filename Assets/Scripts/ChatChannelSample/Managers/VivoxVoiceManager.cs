@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using Unity.Services.Core;
 using Unity.Services.Vivox;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Supertonic.Unity;
 #if AUTH_PACKAGE_PRESENT
 using Unity.Services.Authentication;
 #endif
@@ -27,7 +29,12 @@ public class VivoxVoiceManager : MonoBehaviour
     [SerializeField]
     string _server;
 
-    public bool usePiper = false;
+    [FormerlySerializedAs("usePiper")]
+    public bool useSupertonic = false;
+
+    [Tooltip("Target sample rate for the WAV file injected into Vivox. Must match Vivox's negotiated codec rate. Opus commonly uses 48000. Set to <= 0 to disable resampling and inject the TTS output as-is.")]
+    [SerializeField]
+    int vivoxTargetSampleRate = 48000;
     
     /// <summary>
     /// Access singleton instance through this propriety.
@@ -73,7 +80,7 @@ public class VivoxVoiceManager : MonoBehaviour
             options.SetVivoxCredentials(_server, _domain, _issuer, _key);
         }
 
-        PiperManager.Instance.OnAudioDataGenerated += OnAudioDataGenerated;
+        SupertonicTtsManager.Instance.OnAudioDataGenerated += OnAudioDataGenerated;
         
         await UnityServices.InitializeAsync(options);
         await VivoxService.Instance.InitializeAsync();
@@ -82,20 +89,132 @@ public class VivoxVoiceManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if(PiperManager.Instance != null)
+        if (SupertonicTtsManager.HasInstance)
         {
-            PiperManager.Instance.OnAudioDataGenerated -= OnAudioDataGenerated;
+            SupertonicTtsManager.Instance.OnAudioDataGenerated -= OnAudioDataGenerated;
         }
     }
 
     void OnAudioDataGenerated(float[] audioData, int sampleRate)
     {
-        if (usePiper)
+        if (!useSupertonic) return;
+
+        var sourceDurationSec = audioData.Length / (float)sampleRate;
+        var filePath = Path.Combine(Application.persistentDataPath, "SupertonicAudio.wav");
+
+        // Resample to Vivox's expected rate if a target is configured.
+        // Vivox docs require WAV sample rate to match the negotiated audio codec rate.
+        var outputData = audioData;
+        var outputRate = sampleRate;
+        if (vivoxTargetSampleRate > 0 && vivoxTargetSampleRate != sampleRate)
         {
-            var filePath = Path.Combine(Application.persistentDataPath, "PiperAudio.wav");
-            SaveToWav(filePath, audioData, sampleRate);
-            VivoxService.Instance.StartAudioInjection(filePath);
+            try
+            {
+                outputData = ResampleLinear(audioData, sampleRate, vivoxTargetSampleRate);
+                outputRate = vivoxTargetSampleRate;
+                Debug.Log($"[Vivox-TTS] Resampled {sampleRate}Hz -> {outputRate}Hz " +
+                          $"({audioData.Length} -> {outputData.Length} samples, {sourceDurationSec:F2}s preserved).");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[Vivox-TTS] Resampling failed: {ex.Message}. Falling back to source rate {sampleRate}Hz.");
+                outputData = audioData;
+                outputRate = sampleRate;
+            }
         }
+
+        try
+        {
+            SaveToWav(filePath, outputData, outputRate);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[Vivox-TTS] Failed to write WAV file: {ex.Message}");
+            return;
+        }
+
+        var vivox = VivoxService.Instance;
+        if (vivox == null)
+        {
+            Debug.LogError("[Vivox-TTS] VivoxService.Instance is null. Audio injection skipped.");
+            return;
+        }
+
+        if (!vivox.IsLoggedIn)
+        {
+            Debug.LogError("[Vivox-TTS] Not logged in to Vivox. Audio injection skipped. " +
+                           "Make sure VivoxService.Instance.LoginAsync(...) has completed before sending TTS.");
+            return;
+        }
+
+        var channelCount = vivox.ActiveChannels?.Count ?? 0;
+        if (channelCount == 0)
+        {
+            Debug.LogError("[Vivox-TTS] No active channels. Audio injection will not be heard. " +
+                           "Join a channel via VivoxService.Instance.JoinGroupChannelAsync(...) first.");
+            return;
+        }
+
+        var channelNames = vivox.ActiveChannels != null
+            ? string.Join(", ", vivox.ActiveChannels.Keys)
+            : "(unknown)";
+
+        if (vivox.IsInputDeviceMuted)
+        {
+            Debug.LogWarning("[Vivox-TTS] Input device is muted. Audio injection may not transmit to remote participants.");
+        }
+
+        if (outputRate != 32000 && outputRate != 48000 && outputRate != 16000 && outputRate != 8000)
+        {
+            Debug.LogWarning($"[Vivox-TTS] WAV sample rate is {outputRate}Hz, which is unusual for Vivox. " +
+                             "Vivox docs require the WAV's sample rate to match the negotiated audio codec rate " +
+                             "(commonly 16000/32000/48000Hz). Audio may be silent or pitch-shifted for remote listeners.");
+        }
+
+        try
+        {
+            vivox.StartAudioInjection(filePath);
+            Debug.Log($"[Vivox-TTS] Audio injection requested. " +
+                      $"file={filePath}, samples={outputData.Length}, rate={outputRate}Hz, duration={sourceDurationSec:F2}s, " +
+                      $"channels=[{channelNames}], inputMuted={vivox.IsInputDeviceMuted}. " +
+                      $"Remote participants in these channels should now hear the synthesized audio.");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[Vivox-TTS] StartAudioInjection threw: {ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    static float[] ResampleLinear(float[] input, int sourceRate, int targetRate)
+    {
+        if (input == null || input.Length == 0)
+            return new float[0];
+        if (sourceRate == targetRate)
+            return input;
+        if (sourceRate <= 0 || targetRate <= 0)
+            throw new ArgumentException($"Invalid sample rates: source={sourceRate}, target={targetRate}");
+
+        long outputLength = (long)input.Length * targetRate / sourceRate;
+        if (outputLength <= 0) outputLength = 1;
+        var output = new float[outputLength];
+
+        double ratio = (double)sourceRate / targetRate;
+        int lastIndex = input.Length - 1;
+
+        for (long i = 0; i < outputLength; i++)
+        {
+            double sourcePos = i * ratio;
+            int floor = (int)sourcePos;
+            if (floor >= lastIndex)
+            {
+                output[i] = input[lastIndex];
+                continue;
+            }
+            double frac = sourcePos - floor;
+            output[i] = (float)(input[floor] * (1.0 - frac) + input[floor + 1] * frac);
+        }
+
+        return output;
     }
 
     public async Task InitializeAsync(string playerName)
@@ -117,9 +236,9 @@ public class VivoxVoiceManager : MonoBehaviour
     
     public void TextToSpeechSendMessage(string message)
     {
-        if (usePiper)
+        if (useSupertonic)
         {
-            PiperManager.Instance.Synthesize(message);
+            SupertonicTtsManager.Instance.Synthesize(message);
         }
         else
         {
@@ -133,25 +252,23 @@ public class VivoxVoiceManager : MonoBehaviour
         using (var writer = new BinaryWriter(fileStream))
         {
             int sampleCount = audioData.Length;
-            int channelCount = 1; // 모노 채널
+            int channelCount = 1; // mono
 
-            // WAV 헤더 작성
             writer.Write(System.Text.Encoding.UTF8.GetBytes("RIFF"));
-            writer.Write(36 + sampleCount * 2); // 전체 파일 크기
+            writer.Write(36 + sampleCount * 2);
             writer.Write(System.Text.Encoding.UTF8.GetBytes("WAVE"));
             writer.Write(System.Text.Encoding.UTF8.GetBytes("fmt "));
-            writer.Write(16); // 서브 청크 크기
-            writer.Write((short)1); // 오디오 포맷 (PCM)
-            writer.Write((short)channelCount); // 채널 수
-            writer.Write(sampleRate); // 샘플링 레이트
-            writer.Write(sampleRate * channelCount * 2); // 바이트 레이트
-            writer.Write((short)(channelCount * 2)); // 블록 정렬
-            writer.Write((short)16); // 비트 깊이
+            writer.Write(16);
+            writer.Write((short)1);
+            writer.Write((short)channelCount);
+            writer.Write(sampleRate);
+            writer.Write(sampleRate * channelCount * 2);
+            writer.Write((short)(channelCount * 2));
+            writer.Write((short)16);
 
             writer.Write(System.Text.Encoding.UTF8.GetBytes("data"));
-            writer.Write(sampleCount * 2); // 데이터 청크 크기
+            writer.Write(sampleCount * 2);
 
-            // 오디오 데이터 작성
             foreach (var sample in audioData)
             {
                 short intSample = (short)(Mathf.Clamp(sample, -1f, 1f) * short.MaxValue);
@@ -159,6 +276,6 @@ public class VivoxVoiceManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"WAV 파일이 저장되었습니다: {filePath}");
+        Debug.Log($"[Vivox-TTS] WAV saved: {filePath} ({audioData.Length} samples @ {sampleRate}Hz)");
     }
 }

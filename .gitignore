@@ -2,6 +2,27 @@
 /Logs
 /Temp
 /obj
+/UserSettings
+/Build
+/Builds
 *.sln
 *.csproj
-/UserSettings
+*.user
+*.suo
+*.unityproj
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.opendb
+*.VC.db
+
+# macOS
+.DS_Store
+
+# Unity crash dumps
+mono_crash.*.json
+crashlytics-build.properties
+
+# Rider
+.idea/
