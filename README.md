@@ -55,4 +55,4 @@ Drop a Supertonic voice JSON into `Assets/StreamingAssets/Supertonic/VoiceStyles
 
 ## Credits
 
-Originally built on Sky Kim's [piper-unity](https://github.com/skykim/piper-unity) sample; the Piper backend has since been replaced with Supertonic-3.
+TTS powered by Supertone Inc.'s [Supertonic-3](https://github.com/supertone-inc/supertonic) — a lightweight, on-device, multilingual neural TTS.
